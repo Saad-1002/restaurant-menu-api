@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Saffron Bistro — Menu</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background:#fafafa; color:#222; }
+    header { text-align:center; margin-bottom:18px; }
+    h1 { margin:0; font-size:28px; }
+    p.lead { margin:6px 0 20px; color:#555; }
+    .controls { display:flex; gap:10px; justify-content:center; margin-bottom:16px; }
+    button { padding:10px 14px; border-radius:8px; border:1px solid #ccc; background:#fff; cursor:pointer; }
+    #output { max-width:900px; margin:0 auto; }
+    .card { background:#fff; border-radius:8px; padding:12px; box-shadow:0 1px 3px rgba(0,0,0,0.05); margin-bottom:12px; display:flex; justify-content:space-between; gap:10px; align-items:center; }
+    .left { flex:1; }
+    .meta { color:#666; font-size:13px; margin-bottom:6px; }
+    .price { font-weight:700; }
+    .veg-badge { display:inline-block; padding:4px 8px; border-radius:12px; font-size:12px; border:1px solid #27ae60; color:#27ae60; margin-left:8px; }
+    .nonveg-badge { display:inline-block; padding:4px 8px; border-radius:12px; font-size:12px; border:1px solid #c0392b; color:#c0392b; margin-left:8px; }
+    .categories { display:flex; gap:8px; flex-wrap:wrap; }
+    .cat { background:#fff; padding:8px 10px; border-radius:8px; border:1px solid #e0e0e0; }
+    .error { color:#c0392b; text-align:center; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Saffron Bistro</h1>
+    <p class="lead">Welcome — fresh flavours from our kitchen to your table.</p>
+  </header>
+
+  <div class="controls" style="margin-bottom:18px;">
+    <button id="btnFull">View Full Menu</button>
+    <button id="btnVeg">View Vegetarian Options</button>
+    <button id="btnCats">View Categories</button>
+  </div>
+
+  <main id="output">
+    <!-- fetched data will appear here -->
+  </main>
+
+  <script>
+    const output = document.getElementById('output');
+    const base = '';
+
+    function showError(msg) {
+      output.innerHTML = '<p class="error">' + msg + '</p>';
+    }
+
+    function formatPrice(n) {
+      return '₹' + n;
+    }
+
+    function renderMenu(items) {
+      if (!items || items.length === 0) { output.innerHTML = '<p>No items found.</p>'; return; }
+      output.innerHTML = items.map(item => {
+        const badge = item.isVegetarian ? '<span class="veg-badge">VEG</span>' : '<span class="nonveg-badge">Non-VEG</span>';
+        return `
+          <div class="card">
+            <div class="left">
+              <div style="font-weight:700;">${item.name} ${badge}</div>
+              <div class="meta">${item.category} • ${formatPrice(item.price)}</div>
+              <div>${item.description}</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="price">${formatPrice(item.price)}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderCategories(obj) {
+      if (!obj || !obj.categories || obj.categories.length === 0) { output.innerHTML = '<p>No categories.</p>'; return; }
+      output.innerHTML = '<div class="categories">' + obj.categories.map(c => `<div class="cat"><strong>${c.name}</strong><div>${c.itemCount} item(s)</div></div>`).join('') + '</div>';
+    }
+
+    async function fetchJson(path, renderFn) {
+      output.innerHTML = '<p>Loading…</p>';
+      try {
+        const res = await fetch(base + path);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        renderFn(data);
+      } catch (err) {
+        console.error(err);
+        showError('Failed to fetch: ' + err.message);
+      }
+    }
+
+    document.getElementById('btnFull').addEventListener('click', () => fetchJson('/menu', renderMenu));
+    document.getElementById('btnVeg').addEventListener('click', () => fetchJson('/menu/vegetarian', renderMenu));
+    document.getElementById('btnCats').addEventListener('click', () => fetchJson('/menu/categories', renderCategories));
+
+    // load full menu on first load
+    fetchJson('/menu', renderMenu);
+  </script>
+</body>
+</html>
