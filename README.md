@@ -38,8 +38,6 @@ restaurant-menu-api/
 ├── .gitignore
 └── README.md
 
-yaml
-Copy code
 
 ---
 
@@ -64,9 +62,6 @@ Copy code
 Method: GET
 Description: Returns only vegetarian menu items.
 Sample Response:
-
-json
-Copy code
 [
   {
     "id": 3,
@@ -81,9 +76,6 @@ Copy code
 Method: GET
 Description: Returns all unique menu categories with the number of items in each category.
 Sample Response:
-
-json
-Copy code
 {
   "categories": [
     { "name": "Appetizer", "itemCount": 2 },
@@ -93,20 +85,12 @@ Copy code
 }
 6. Installation & Setup Instructions
 1. Clone the Repository
-bash
-Copy code
 git clone <your-repository-link>
 2. Navigate to Project Folder
-bash
-Copy code
 cd restaurant-menu-api
 3. Install Dependencies
-bash
-Copy code
 npm install
 4. Start the Server
-bash
-Copy code
 node server.js
 5. Access the API
 Full Menu → http://localhost:3000/menu
@@ -117,9 +101,6 @@ Categories → http://localhost:3000/menu/categories
 
 6. Access the Frontend
 Open:
-
-arduino
-Copy code
 http://localhost:3000
 7. Features
 Fully functional Node.js + Express.js API
@@ -137,7 +118,7 @@ Clean and organized project structure
 Error handling in fetch requests
 
 8. GitHub Repository Link
-👉 GitHub: https://github.com/your-username/restaurant-menu-api
+👉 GitHub: https://github.com/Saad-1002/restaurant-menu-api
 
 9. Author Information
 Name: Sheikh Saad
